@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Container from 'react-bootstrap/Container';
 import BooksCarousel from './BooksCarousel';
 
 
@@ -36,7 +37,9 @@ class BestBooks extends React.Component {
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
 
         {this.state.books.length ? (
-          <BooksCarousel books={this.state.books} />
+          <Container>
+            <BooksCarousel books={this.state.books} />
+          </Container>
         ) : (
           <h3>No Books Found :(</h3>
         )}
