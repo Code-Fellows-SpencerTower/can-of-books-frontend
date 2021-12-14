@@ -1,14 +1,29 @@
 import React from 'react';
+import axios from 'axios';
+
+const url = 'https://kl-st-can-of-books-backend.herokuapp.com';
 
 class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: []
+      books: [],
+      user: ''
+
     }
   }
 
   /* TODO: Make a GET request to your API to fetch books for the logged in user  */
+
+  getBooks = async (user = null) => {
+    const fullUrl = user ? `${url}/books?user=${user}` : `${url}/books`;
+    let bookResponse = await axios.get(fullUrl);
+    this.setState({ books: bookResponse.data });
+  }
+
+  componentDidMount() {
+    this.getBooks();
+  }
 
   render() {
 
