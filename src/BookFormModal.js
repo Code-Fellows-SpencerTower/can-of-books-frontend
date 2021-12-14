@@ -43,8 +43,8 @@ class BookFormModal extends Component {
     return (
       <div>
         <Modal show={this.props.show} onHide={this.handleClose} animation={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>{this.props.book.title}</Modal.Title>
+          <Modal.Header>
+            <Modal.Title>Add a Book</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Card border="primary" style={{ width: '18rem' }}>

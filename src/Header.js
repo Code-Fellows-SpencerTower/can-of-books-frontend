@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, NavItem } from 'react-bootstrap';
+import { Navbar, NavItem, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import './Header.css';
 import LogoutButton from './LogoutButton';
@@ -11,7 +11,7 @@ class Header extends React.Component {
         <Navbar.Brand>My Favorite Books</Navbar.Brand>
         <NavItem><Link to="/" className="nav-link">Home</Link></NavItem>
         {this.props.user && <NavItem><Link to="/profile" className="nav-link">Profile</Link></NavItem>}
-        {this.props.user && <Navbar.Toggle onClick={() => this.props.showModal} />}
+        {this.props.user && <NavItem className="nav-link"><Button onClick={this.props.showModal}> Add Book </ Button></ NavItem>}
         {this.props.user && <NavItem><LogoutButton onLogout={this.props.onLogout} className="nav-link">Log Out</LogoutButton></NavItem>}
         {/* TODO: if the user is logged in, render a navigation link to profile page */}
         {/* TODO: if the user is logged in, render the `LogoutButton` */}

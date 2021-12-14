@@ -23,19 +23,19 @@ class App extends React.Component {
       user: null,
       email: null,
       books: [],
-      showModal: false,
+      show: false,
     }
   }
 
   //--------------Modal Functions----------------
   showModal = () => {
     // sets state to true when modal is shown
-    this.setState({ showModal: true });
+    this.setState({ show: true });
   }
 
   closeModal = () => {
     // sets state to false when modal closed
-    this.setState({ showModal: false });
+    this.setState({ show: false });
   }
 
   // when user logs in, get books
@@ -83,7 +83,7 @@ class App extends React.Component {
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
               {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
-              {(this.state.user && this.state.showModal) && <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} />}
+              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} user={this.state.user} />}
             </Route>
             <Route exact path="/profile">
               {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
