@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Carousel from 'react-bootstrap/Carousel';
 
 const url = 'https://kl-st-can-of-books-backend.herokuapp.com';
 
