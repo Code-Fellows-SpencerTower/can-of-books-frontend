@@ -1,14 +1,32 @@
 import React from 'react';
+import axios from 'axios';
+import Container from 'react-bootstrap/Container';
+import BooksCarousel from './BooksCarousel';
+
+
+const url = 'https://kl-st-can-of-books-backend.herokuapp.com';
 
 class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: []
+      books: [],
+      user: ''
+
     }
   }
 
   /* TODO: Make a GET request to your API to fetch books for the logged in user  */
+
+  getBooks = async (user = null) => {
+    const fullUrl = user ? `${url}/books?user=${user}` : `${url}/books`;
+    let bookResponse = await axios.get(fullUrl);
+    this.setState({ books: bookResponse.data });
+  }
+
+  componentDidMount() {
+    this.getBooks();
+  }
 
   render() {
 
@@ -19,7 +37,9 @@ class BestBooks extends React.Component {
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
 
         {this.state.books.length ? (
-          <p>Book Carousel coming soon</p>
+          <Container>
+            <BooksCarousel books={this.state.books} />
+          </Container>
         ) : (
           <h3>No Books Found :(</h3>
         )}
