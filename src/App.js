@@ -10,6 +10,9 @@ import {
 } from "react-router-dom";
 import BestBooks from './BestBooks';
 import Profile from './Profile';
+import axios from 'axios';
+
+const url = 'https://kl-st-can-of-books-backend.herokuapp.com'
 
 class App extends React.Component {
 
@@ -17,15 +20,18 @@ class App extends React.Component {
     super(props);
     this.state = {
       user: null,
-      email: null
+      email: null,
+      books: []
     }
   }
 
+  // when user logs in, get books
   loginHandler = (formObj) => {
     this.setState({
       user: formObj.user,
       email: formObj.email
-    })
+    }, () => this.getBooks());
+
   }
 
   logoutHandler = () => {
@@ -36,6 +42,25 @@ class App extends React.Component {
     })
   }
 
+  // url = https://kl-st-can-of-books-backend.herokuapp.com
+  getBooks = async () => {
+    const fullUrl = this.state.email ? `${url}/books?user=${this.state.email}` : `${url}/books`; // Need to change and add error handling
+    console.log(fullUrl);
+    let bookResponse = await axios.get(fullUrl);
+    this.setState({ books: bookResponse.data });
+  }
+
+  // componentDidMount() {
+  //   this.getBooks();
+  // }
+
+  // set books function
+  setBooks = (newBook) => {
+    this.setState({ books: [...this.state.books, newBook] }, console.log("In set books:", this.state.books))
+  }
+
+
+  // pass set books and this.state.books to profile and bestbooks
   render() {
     return (
       <>
@@ -44,11 +69,11 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
-              {this.state.user ? <BestBooks /> : <Login onLogin={this.loginHandler} />}
+              {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
             </Route>
             <Route exact path="/profile">
               {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-              <Profile user={this.state.user} email={this.state.email} />
+              <Profile user={this.state.user} email={this.state.email} books={this.state.books} setBooks={this.setBooks} />
             </Route>
           </Switch>
           <Footer />

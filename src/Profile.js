@@ -27,7 +27,7 @@ class Profile extends Component {
       status: e.target.status.value
     }
     console.log(newBook)
-    this.makeBook(newBook);
+    this.props.setBooks(newBook);
     e.target.reset()
   }
 
