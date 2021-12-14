@@ -9,15 +9,16 @@ class Profile extends Component {
 
   makeBook = async (newBook) => {
     try {
+      // creates new id for book, sends book to db via server, returns book with id
       const bookResponse = await axios.post(process.env.SERVER_URL + '/books', newBook);
-      // 
-      this.setState({ books: [...this.props.books, bookResponse.data] })
+      // add book w/ id to state
+      this.props.setBooks(bookResponse.data);
     } catch (e) {
       console.error(e);
     }
   }
 
-  handleSubmit = (e, val) => {
+  handleSubmit = (e) => {
     e.preventDefault()
 
     const newBook = {
@@ -27,7 +28,7 @@ class Profile extends Component {
       status: e.target.status.value
     }
     console.log(newBook)
-    this.props.setBooks(newBook);
+    this.makeBook(newBook)
     e.target.reset()
   }
 
@@ -39,6 +40,7 @@ class Profile extends Component {
       <>
         <p>User: {this.props.user}</p>
         <p>Email: {this.props.email}</p>
+        
         <Card border="primary" style={{ width: '18rem' }}>
           <Card.Header>Add New Book</Card.Header>
           <Card.Body>
