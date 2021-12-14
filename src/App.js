@@ -9,6 +9,7 @@ import {
   Route
 } from "react-router-dom";
 import BestBooks from './BestBooks';
+import BookFormModal from './BookFormModal';
 import Profile from './Profile';
 import axios from 'axios';
 
@@ -21,8 +22,20 @@ class App extends React.Component {
     this.state = {
       user: null,
       email: null,
-      books: []
+      books: [],
+      showModal: false,
     }
+  }
+
+  //--------------Modal Functions----------------
+  showModal = () => {
+    // sets state to true when modal is shown
+    this.setState({ showModal: true });
+  }
+
+  closeModal = () => {
+    // sets state to false when modal closed
+    this.setState({ showModal: false });
   }
 
   // when user logs in, get books
@@ -65,15 +78,16 @@ class App extends React.Component {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler} />
+          <Header user={this.state.user} onLogout={this.logoutHandler} showModal={this.showModal} />
           <Switch>
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
               {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
+              {(this.state.user && this.state.showModal) && <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} />}
             </Route>
             <Route exact path="/profile">
               {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-              <Profile user={this.state.user} email={this.state.email} books={this.state.books} setBooks={this.setBooks} />
+              <Profile user={this.state.user} email={this.state.email} />
             </Route>
           </Switch>
           <Footer />
