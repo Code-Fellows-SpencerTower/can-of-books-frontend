@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import BooksCarousel from './BooksCarousel';
 
 
-const url = 'https://kl-st-can-of-books-backend.herokuapp.com';
+const url = process.env.SERVER_URL;
 
 class BestBooks extends React.Component {
   constructor(props) {
