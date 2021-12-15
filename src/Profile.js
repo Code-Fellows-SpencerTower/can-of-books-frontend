@@ -1,4 +1,5 @@
 import { Component } from "react";
+import Books from "./Book";
 
 class Profile extends Component {
 
@@ -10,9 +11,11 @@ class Profile extends Component {
       <>
         <p>User: {this.props.user}</p>
         <p>Email: {this.props.email}</p>
+        <Books books={this.props.books} deleteBook={this.props.deleteBook} />
       </>
     )
   }
 };
 
 export default Profile;
+
