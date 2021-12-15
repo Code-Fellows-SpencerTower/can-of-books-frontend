@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 
-
+const url = 'https://kl-st-can-of-books-backend.herokuapp.com'
 
 class BookFormModal extends Component {
 
@@ -13,10 +13,12 @@ class BookFormModal extends Component {
   makeBook = async (newBook) => {
     try {
       // creates new id for book, sends book to db via server, returns book with id
-      const bookResponse = await axios.post(process.env.SERVER_URL + '/books', newBook);
-      // add book w/ id to state
+      console.log('makeBook called');
+      const bookResponse = await axios.post(url + '/books', newBook);
+      console.log("from makeBook", bookResponse.data);
       this.props.setBooks(bookResponse.data);
     } catch (e) {
+      console.log('makeBook called Error');
       console.error(e);
     }
   }
@@ -27,7 +29,7 @@ class BookFormModal extends Component {
     const newBook = {
       title: e.target.title.value,
       description: e.target.description.value,
-      email: e.target.email.value,
+      email: this.props.email,
       status: e.target.status.value
     }
     console.log(newBook)
@@ -52,16 +54,12 @@ class BookFormModal extends Component {
               <Card.Body>
                 <Card.Title>User: {this.props.user}</Card.Title>
                 <Form onSubmit={this.handleSubmit} >
-                  <Form.Group className="mb-3" controlId="name">
+                  <Form.Group className="mb-3" controlId="title">
                     <Form.Label>Book Title:</Form.Label>
                     <Form.Control type="text" />
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="title">
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control type="text" />
-                  </Form.Group>
                   <Form.Group className="mb-3" controlId="description">
-                    <Form.Label>Email:</Form.Label>
+                    <Form.Label>Description:</Form.Label>
                     <Form.Control type="text" />
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="status">

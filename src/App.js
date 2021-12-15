@@ -23,7 +23,7 @@ class App extends React.Component {
       user: null,
       email: null,
       books: [],
-      show: false,
+      show: false
     }
   }
 
@@ -55,11 +55,11 @@ class App extends React.Component {
     })
   }
 
-  // url = https://kl-st-can-of-books-backend.herokuapp.com
   getBooks = async () => {
+    console.log("Get Books");
     const fullUrl = this.state.email ? `${url}/books?user=${this.state.email}` : `${url}/books`; // Need to change and add error handling
-    console.log(fullUrl);
     let bookResponse = await axios.get(fullUrl);
+    console.log(bookResponse.data);
     this.setState({ books: bookResponse.data });
   }
 
@@ -70,6 +70,18 @@ class App extends React.Component {
   // set books function
   setBooks = (newBook) => {
     this.setState({ books: [...this.state.books, newBook] }, console.log("In set books:", this.state.books))
+  }
+
+  deleteBook = async (id) => {
+    console.log("delete", id)
+    // try {
+    //   await axios.delete(url + '/books/' + id);
+    //   // remove the cat whose id matches the cat from the cat array
+    //   const updatedBooks = this.state.books.filter(book => book._id !== id)
+    //   this.setState({ books: updatedBooks })
+    // } catch (e) {
+    //   console.error(e);
+    // }
   }
 
 
@@ -83,11 +95,11 @@ class App extends React.Component {
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
               {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
-              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} user={this.state.user} />}
+              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
             </Route>
             <Route exact path="/profile">
               {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-              <Profile user={this.state.user} email={this.state.email} />
+              <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} />
             </Route>
           </Switch>
           <Footer />
