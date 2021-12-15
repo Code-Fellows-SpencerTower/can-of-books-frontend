@@ -69,9 +69,6 @@ class App extends React.Component {
     this.setState({ books: bookResponse.data });
   }
 
-  // componentDidMount() {
-  //   this.getBooks();
-  // }
 
   // set books function
   setBooks = (newBook) => {
@@ -82,7 +79,7 @@ class App extends React.Component {
     console.log("delete", book._id)
     try {
       await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
-      
+
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
     } catch (e) {
@@ -120,8 +117,7 @@ class App extends React.Component {
               {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
             </Route>
             <Route exact path="/profile">
-              {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-              <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} />
+              <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
               {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
             </Route>
           </Switch>
