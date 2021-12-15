@@ -38,6 +38,8 @@ class App extends React.Component {
     this.setState({ show: false });
   }
 
+  //-------------Login Functions----------------
+
   // when user logs in, get books
   loginHandler = (formObj) => {
     this.setState({
@@ -56,6 +58,8 @@ class App extends React.Component {
       show: false
     })
   }
+
+  //--------------Query Functions---------------
 
   getBooks = async () => {
     console.log("Get Books");
@@ -78,7 +82,7 @@ class App extends React.Component {
     console.log("delete", book._id)
     try {
       await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
-      // remove the cat whose id matches the cat from the cat array
+      
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
     } catch (e) {
@@ -86,6 +90,22 @@ class App extends React.Component {
     }
   }
 
+  updateBook = async (updateBookObj, id) => {
+    try {
+      // send put request with updated book
+      const updatedBook = await axios.put(url + '/books/' + id, updatedBookObj);
+      const updatedBookState = this.state.books.map(book => {
+        // make sure ids match
+        if (book._id === id) {
+          return this.updateBook.data;
+        }
+        return book;
+      })
+      this.setState({ books: updatedBookState });
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   // pass set books and this.state.books to profile and bestbooks
   render() {
