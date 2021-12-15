@@ -51,7 +51,9 @@ class App extends React.Component {
     console.log('handle log out');
     this.setState({
       user: null,
-      email: null
+      email: null,
+      books: [],
+      show: false
     })
   }
 
@@ -75,7 +77,7 @@ class App extends React.Component {
   deleteBook = async (book) => {
     console.log("delete", book._id)
     try {
-      await axios.delete(url + '/books/' + book._id);
+      await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
       // remove the cat whose id matches the cat from the cat array
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
