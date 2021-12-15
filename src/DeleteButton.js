@@ -7,7 +7,7 @@ export default class DeleteButton extends Component {
   render() {
 
     return (
-      <Button variant="warning" onClick={() => this.props.deleteBook(this.props._id)}>Delete Book</ Button>
+      <Button variant="outline-danger" onClick={() => this.props.deleteBook(this.props.book)}>Delete Book</ Button>
     )
   }
 }
