@@ -12,13 +12,14 @@ Can of Books is a web app that tracks what books have impacted you
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
-Technologies: React, Javascript, Node.js, express, MongoDB
+Technologies: React, Javascript, Node.js, Express, MongoDB, Bootstrap
 
 ## Change Log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
 
 01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
 12-14-2021 5:45pm - adds add/delete functinality for books to user profile
+12-15-2021 6:00pm - adds book update functinality, updates styling for carousel, profile page, and nav bar
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
