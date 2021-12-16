@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Container from 'react-bootstrap/Container';
 import ListGroup from 'react-bootstrap/ListGroup'
 import DeleteButton from './DeleteButton';
 import UpdateButton from './UpdateButton';
@@ -22,10 +23,11 @@ class Book extends Component {
 
   render() {
     return (
-      <Container style={{ justifyContent: 'space-between'}}>
-        <h3>{this.props.book.title}</h3>
-        <UpdateButton book={this.props.book} showUpdateModal={this.props.showUpdateModal} /> <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} />);
-      </ Container> 
+      <Container style={{ justifyContent: 'space-between' }}>
+        <p style={{fontSize: '1.6em', fontWeight: 'bold' }}>{this.props.book.title}</p>
+        <UpdateButton book={this.props.book} showUpdateModal={this.props.showUpdateModal} />
+        <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} />
+      </ Container>
     )
   }
 }

@@ -13,7 +13,7 @@ class Profile extends Component {
   }
 
   //--------------Modal Functions----------------
-  
+
   showModal = () => {
     // sets state to true when modal is shown
     this.setState({ show: true });
@@ -33,8 +33,8 @@ class Profile extends Component {
   render() {
     return (
       <>
-        <p>User: {this.props.user}</p>
-        <p>Email: {this.props.email}</p>
+        <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>User: {this.props.user}</p>
+        <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>Email: {this.props.email}</p>
         <Books books={this.props.books} showUpdateModal={this.showUpdateModal} deleteBook={this.props.deleteBook} />
         <UpdateModal updateBook={this.props.updateBook} closeModal={this.closeModal} show={this.state.show} email={this.props.email} user={this.props.user} book={this.state.bookToUpdate} />
       </>
