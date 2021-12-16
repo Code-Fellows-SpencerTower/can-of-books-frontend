@@ -9,6 +9,7 @@ import {
   Route
 } from "react-router-dom";
 import BestBooks from './BestBooks';
+import Container from 'react-bootstrap/Container';
 import BookFormModal from './BookFormModal';
 import Profile from './Profile';
 import axios from 'axios';
@@ -110,17 +111,18 @@ class App extends React.Component {
       <>
         <Router>
           <Header user={this.state.user} onLogout={this.logoutHandler} showModal={this.showModal} />
-          <Switch>
-            <Route exact path="/">
-              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
-              {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
-              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
-            </Route>
-            <Route exact path="/profile">
-              <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
-              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
-            </Route>
-          </Switch>
+          <Container>
+            <Switch>
+              <Route exact path="/">
+                {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
+                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+              </Route>
+              <Route exact path="/profile">
+                <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
+                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+              </Route>
+            </Switch>
+          </ Container>
           <Footer />
         </Router>
       </>
