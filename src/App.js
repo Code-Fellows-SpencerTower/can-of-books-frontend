@@ -9,6 +9,7 @@ import {
   Route
 } from "react-router-dom";
 import BestBooks from './BestBooks';
+import Container from 'react-bootstrap/Container';
 import BookFormModal from './BookFormModal';
 import Profile from './Profile';
 import axios from 'axios';
@@ -38,6 +39,8 @@ class App extends React.Component {
     this.setState({ show: false });
   }
 
+  //-------------Login Functions----------------
+
   // when user logs in, get books
   loginHandler = (formObj) => {
     this.setState({
@@ -57,6 +60,8 @@ class App extends React.Component {
     })
   }
 
+  //--------------Query Functions---------------
+
   getBooks = async () => {
     console.log("Get Books");
     const fullUrl = this.state.email ? `${url}/books?user=${this.state.email}` : `${url}/books`; // Need to change and add error handling
@@ -65,9 +70,6 @@ class App extends React.Component {
     this.setState({ books: bookResponse.data });
   }
 
-  // componentDidMount() {
-  //   this.getBooks();
-  // }
 
   // set books function
   setBooks = (newBook) => {
@@ -78,7 +80,7 @@ class App extends React.Component {
     console.log("delete", book._id)
     try {
       await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
-      // remove the cat whose id matches the cat from the cat array
+
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
     } catch (e) {
@@ -86,6 +88,22 @@ class App extends React.Component {
     }
   }
 
+  updateBook = async (updatedBookObj, id) => {
+    try {
+      // send put request with updated book
+      const updatedBook = await axios.put(url + '/books/' + id, updatedBookObj);
+      const updatedBookState = this.state.books.map(book => {
+        // make sure ids match
+        if (book._id === id) {
+          return updatedBook.data;
+        }
+        return book;
+      })
+      this.setState({ books: updatedBookState });
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   // pass set books and this.state.books to profile and bestbooks
   render() {
@@ -93,18 +111,18 @@ class App extends React.Component {
       <>
         <Router>
           <Header user={this.state.user} onLogout={this.logoutHandler} showModal={this.showModal} />
-          <Switch>
-            <Route exact path="/">
-              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
-              {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
-              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
-            </Route>
-            <Route exact path="/profile">
-              {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
-              <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} />
-              {<BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />}
-            </Route>
-          </Switch>
+          <Container>
+            <Switch>
+              <Route exact path="/">
+                {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
+                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+              </Route>
+              <Route exact path="/profile">
+                <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
+                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+              </Route>
+            </Switch>
+          </ Container>
           <Footer />
         </Router>
       </>

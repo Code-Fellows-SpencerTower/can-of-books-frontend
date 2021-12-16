@@ -1,6 +1,8 @@
 import { Component } from 'react';
+import Container from 'react-bootstrap/Container';
 import ListGroup from 'react-bootstrap/ListGroup'
 import DeleteButton from './DeleteButton';
+import UpdateButton from './UpdateButton';
 
 class Books extends Component {
 
@@ -9,7 +11,7 @@ class Books extends Component {
       <ListGroup>
         {this.props.books.length && this.props.books.map(book => (
           <ListGroup.Item key={book._id} >
-            <Book book={book} deleteBook={this.props.deleteBook} />
+            <Book book={book} showUpdateModal={this.props.showUpdateModal} deleteBook={this.props.deleteBook} />
           </ListGroup.Item>
         ))}
       </ListGroup>
@@ -19,15 +21,14 @@ class Books extends Component {
 
 class Book extends Component {
 
-  //   handleClick = (e) => {
-  //     console.log(e.target)
-  //     this.props.deleteCat(this.props.info._id)
-  //   }
-
   render() {
     return (
-      <h3>{this.props.book.title} <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} /> </h3>
-    );
+      <Container style={{ justifyContent: 'space-between' }}>
+        <p style={{fontSize: '1.6em', fontWeight: 'bold' }}>{this.props.book.title}</p>
+        <UpdateButton book={this.props.book} showUpdateModal={this.props.showUpdateModal} />
+        <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} />
+      </ Container>
+    )
   }
 }
 

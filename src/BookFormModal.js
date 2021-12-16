@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 
 const url = 'https://kl-st-can-of-books-backend.herokuapp.com'
@@ -49,29 +48,23 @@ class BookFormModal extends Component {
             <Modal.Title>Add a Book</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Card border="primary" style={{ width: '18rem' }}>
-              <Card.Header>Add New Book</Card.Header>
-              <Card.Body>
-                <Card.Title>User: {this.props.user}</Card.Title>
-                <Form onSubmit={this.handleSubmit} >
-                  <Form.Group className="mb-3" controlId="title">
-                    <Form.Label>Book Title:</Form.Label>
-                    <Form.Control type="text" />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="description">
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control type="text" />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="status">
-                    <Form.Label>Book Status:</Form.Label>
-                    <Form.Control type="text" />
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Add Book
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
+            <Form onSubmit={this.handleSubmit} >
+              <Form.Group className="mb-3" controlId="title">
+                <Form.Label>Book Title:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="description">
+                <Form.Label>Description:</Form.Label>
+                <Form.Control type="textarea" />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="status">
+                <Form.Label>Book Status:</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                Add Book
+              </Button>
+            </Form>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
