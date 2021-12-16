@@ -87,14 +87,14 @@ class App extends React.Component {
     }
   }
 
-  updateBook = async (updateBookObj, id) => {
+  updateBook = async (updatedBookObj, id) => {
     try {
       // send put request with updated book
       const updatedBook = await axios.put(url + '/books/' + id, updatedBookObj);
       const updatedBookState = this.state.books.map(book => {
         // make sure ids match
         if (book._id === id) {
-          return this.updateBook.data;
+          return updatedBook.data;
         }
         return book;
       })

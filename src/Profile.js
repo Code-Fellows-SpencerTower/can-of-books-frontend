@@ -7,7 +7,8 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false
+      show: false,
+      bookToUpdate: {}
     }
   }
 
@@ -22,13 +23,19 @@ class Profile extends Component {
     this.setState({ show: false });
   }
 
+  //--------------UpdateBook-----------------
+
+  showUpdateModal = (book) => {
+    this.setState({ show: true, bookToUpdate: book });
+  }
+
   render() {
     return (
       <>
         <p>User: {this.props.user}</p>
         <p>Email: {this.props.email}</p>
-        <Books books={this.props.books} deleteBook={this.props.deleteBook}/>
-        {<UpdateModal updateBook={this.props.updateBook}  closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.email} user={this.props.user} />}
+        <Books books={this.props.books} showUpdateModal={this.showUpdateModal} deleteBook={this.props.deleteBook} />
+        {<UpdateModal updateBook={this.props.updateBook} closeModal={this.closeModal} show={this.state.show} email={this.props.email} user={this.props.user} book={this.state.bookToUpdate} />}
       </>
     )
   }
