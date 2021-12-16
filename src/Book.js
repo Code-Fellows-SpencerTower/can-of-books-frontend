@@ -22,8 +22,11 @@ class Book extends Component {
 
   render() {
     return (
-      <h3>{this.props.book.title}<UpdateButton book={this.props.book} showUpdateModal={this.props.showUpdateModal} /> <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} /> </h3>
-    );
+      <Container style={{ justifyContent: 'space-between'}}>
+        <h3>{this.props.book.title}</h3>
+        <UpdateButton book={this.props.book} showUpdateModal={this.props.showUpdateModal} /> <DeleteButton deleteBook={this.props.deleteBook} book={this.props.book} />);
+      </ Container> 
+    )
   }
 }
 
