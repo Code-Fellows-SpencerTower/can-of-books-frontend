@@ -12,8 +12,18 @@ class BookFormModal extends Component {
   makeBook = async (newBook) => {
     try {
       // creates new id for book, sends book to db via server, returns book with id
-      console.log('makeBook called');
-      const bookResponse = await axios.post(url + '/books', newBook);
+      // console.log('makeBook called');
+      // const bookResponse = await axios.post(url + '/books', newBook);
+      const res = this.props.getID
+      const jwt = res.__raw;
+
+      const config = {
+        method: 'get',
+        baseURL: process.env.SERVER_URL,
+        url: '/books',
+        headers: { "Authorization": `Bearer ${jwt}` }
+      }
+      const bookResponse = await axios(config);
       console.log("from makeBook", bookResponse.data);
       this.props.setBooks(bookResponse.data);
     } catch (e) {

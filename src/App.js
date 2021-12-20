@@ -63,8 +63,26 @@ class App extends React.Component {
 
   getBooks = async () => {
     console.log("Get Books");
-    const fullUrl = this.state.email ? `${url}/books?user=${this.props.auth0.user.email}` : `${url}/books`; // Need to change and add error handling
-    let bookResponse = await axios.get(fullUrl);
+    // const fullUrl = this.state.email ? `${url}/books?user=${this.props.auth0.user.email}` : `${url}/books`; // Need to change and add error handling
+
+    // get token
+
+    const res = await this.props.auth0.getIdTokenClaims();
+    // put token in variable
+    const jwt = res.__raw;
+
+    console.log(jwt);
+
+    const config = {
+      method: 'get',
+      // change back to process.env
+      baseURL: 'https://kl-st-can-of-books-backend.herokuapp.com',
+      url: '/books',
+      headers: {
+        "Authorization": `Bearer ${jwt}`
+      }
+    }
+    const bookResponse = await axios(config);
     console.log(bookResponse.data);
     this.setState({ books: bookResponse.data });
   }
@@ -116,7 +134,7 @@ class App extends React.Component {
                 <Route exact path="/">
                   <h2> {this.props.auth0.user.given_name} </ h2>
                   <BestBooks books={this.state.books} getBooks={this.getBooks} />
-                  <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
+                  <BookFormModal getID={ this.props.auth0.getIdTokenClaims} closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
                 </Route>
                 <Route exact path="/profile">
                   <Profile user={this.props.auth0.user.given_name} email={this.props.auth0.user.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
