@@ -9,13 +9,13 @@ import {
   Route
 } from "react-router-dom";
 import BestBooks from './BestBooks';
-import Container from 'react-bootstrap/Container';
 import BookFormModal from './BookFormModal';
 import Profile from './Profile';
 import axios from 'axios';
 import { withAuth0 } from '@auth0/auth0-react';
 
-const url = process.env.SERVER_URL;
+
+const url = 'https://kl-st-can-of-books-backend.herokuapp.com';
 
 class App extends React.Component {
 
@@ -43,19 +43,17 @@ class App extends React.Component {
   //-------------Login Functions----------------
 
   // when user logs in, get books
-  loginHandler = (formObj) => {
+  loginHandler = () => {
+    console.log(this.props.auth0);
     this.setState({
-      user: formObj.user,
-      email: formObj.email
+      user: this.props.auth0.user.given_name,
+      email: this.props.auth0.user.email
     }, () => this.getBooks());
-
   }
 
   logoutHandler = () => {
     console.log('handle log out');
     this.setState({
-      user: null,
-      email: null,
       books: [],
       show: false
     })
@@ -65,7 +63,7 @@ class App extends React.Component {
 
   getBooks = async () => {
     console.log("Get Books");
-    const fullUrl = this.state.email ? `${url}/books?user=${this.state.email}` : `${url}/books`; // Need to change and add error handling
+    const fullUrl = this.state.email ? `${url}/books?user=${this.props.auth0.user.email}` : `${url}/books`; // Need to change and add error handling
     let bookResponse = await axios.get(fullUrl);
     console.log(bookResponse.data);
     this.setState({ books: bookResponse.data });
@@ -80,7 +78,7 @@ class App extends React.Component {
   deleteBook = async (book) => {
     console.log("delete", book._id)
     try {
-      await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
+      await axios.delete(url + '/books/' + book._id + `?email=${this.props.auth0.user.email}`);
 
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
@@ -111,20 +109,21 @@ class App extends React.Component {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler} showModal={this.showModal} />
           {this.props.auth0.isAuthenticated ?
-            <Container>
+            <>
+              <Header user={this.props.auth0.user.given_name} logoutHandler={this.logoutHandler} showModal={this.showModal} loginHandler={this.loginHandler} />
               <Switch>
                 <Route exact path="/">
-                  <BestBooks books={this.state.books} />
-                  <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+                  <h2> {this.props.auth0.user.given_name} </ h2>
+                  <BestBooks books={this.state.books} getBooks={this.getBooks} />
+                  <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
                 </Route>
                 <Route exact path="/profile">
-                  <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
-                  <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
+                  <Profile user={this.props.auth0.user.given_name} email={this.props.auth0.user.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
+                  <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
                 </Route>
               </Switch>
-            </ Container> :  <Login onLogin={this.loginHandler} />}
+            </ > : <Login loginHandler={this.loginHandler} />}
           <Footer />
         </Router>
       </>

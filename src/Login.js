@@ -10,7 +10,7 @@ class Login extends React.Component {
       <Card style={{ width: '18rem' }}>
         <Card.Body>
           <Card.Title>Log In</Card.Title>
-          <LoginButton />
+          <LoginButton loginHandler={this.props.loginHandler} />
         </Card.Body>
       </Card>
     )

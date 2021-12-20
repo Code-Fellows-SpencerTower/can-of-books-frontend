@@ -1,13 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import { useAuth0 } from "@auth0/auth0-react";
 
-const LogoutButton = () => {
+function LogoutButton(props) {
   const { logout } = useAuth0();
 
   return (
     <Button onClick={() => {
-      this.props.onLogout();
-      return logout({ returnTo: window.location.origin })
+      logout({ returnTo: window.location.origin })
+      props.logoutHandler()
     }}>
       Log Out
     </Button>

@@ -7,11 +7,14 @@ import BooksCarousel from './BooksCarousel';
 
 class BestBooks extends React.Component {
 
+  componentDidMount = () => {
+    this.props.getBooks();
+  }
   render() {
 
     return (
       <>
-        <Container className="mx-auto" style={{ display: 'flex', justifyContent: 'center'}}>
+        <Container className="mx-auto" style={{ display: 'flex', justifyContent: 'center' }}>
           <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
         </Container>
         {
@@ -29,3 +32,4 @@ class BestBooks extends React.Component {
 }
 
 export default BestBooks;
+
