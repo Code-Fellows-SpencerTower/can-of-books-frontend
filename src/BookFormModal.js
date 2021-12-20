@@ -4,23 +4,20 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
-const url = 'https://kl-st-can-of-books-backend.herokuapp.com'
+const url = process.env.REACT_APP_SERVER_URL;
 
 class BookFormModal extends Component {
 
-
   makeBook = async (newBook) => {
     try {
-      // creates new id for book, sends book to db via server, returns book with id
-      // console.log('makeBook called');
-      // const bookResponse = await axios.post(url + '/books', newBook);
-      const res = this.props.getID
+      const res = await this.props.auth0.getIdTokenClaims();
       const jwt = res.__raw;
 
       const config = {
-        method: 'get',
-        baseURL: process.env.SERVER_URL,
+        method: 'post',
+        baseURL: url,
         url: '/books',
+        data: newBook,
         headers: { "Authorization": `Bearer ${jwt}` }
       }
       const bookResponse = await axios(config);
