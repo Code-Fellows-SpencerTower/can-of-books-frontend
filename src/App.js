@@ -129,7 +129,7 @@ class App extends React.Component {
                   <BookFormModal auth0={this.props.auth0} closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
                 </Route>
               </Switch>
-            </ > : <Login className="m-5" loginHandler={this.loginHandler} />}
+            </ > : <Login loginHandler={this.loginHandler} />}
           <Footer />
         </Router>
       </>
