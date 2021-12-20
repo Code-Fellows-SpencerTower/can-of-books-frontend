@@ -9,20 +9,19 @@ import {
   Route
 } from "react-router-dom";
 import BestBooks from './BestBooks';
-import Container from 'react-bootstrap/Container';
 import BookFormModal from './BookFormModal';
 import Profile from './Profile';
 import axios from 'axios';
+import { withAuth0 } from '@auth0/auth0-react';
 
-const url = 'https://kl-st-can-of-books-backend.herokuapp.com'
+
+const url = process.env.REACT_APP_SERVER_URL;
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
-      email: null,
       books: [],
       show: false
     }
@@ -39,33 +38,23 @@ class App extends React.Component {
     this.setState({ show: false });
   }
 
-  //-------------Login Functions----------------
-
-  // when user logs in, get books
-  loginHandler = (formObj) => {
-    this.setState({
-      user: formObj.user,
-      email: formObj.email
-    }, () => this.getBooks());
-
-  }
-
-  logoutHandler = () => {
-    console.log('handle log out');
-    this.setState({
-      user: null,
-      email: null,
-      books: [],
-      show: false
-    })
-  }
-
   //--------------Query Functions---------------
 
   getBooks = async () => {
     console.log("Get Books");
-    const fullUrl = this.state.email ? `${url}/books?user=${this.state.email}` : `${url}/books`; // Need to change and add error handling
-    let bookResponse = await axios.get(fullUrl);
+    const res = await this.props.auth0.getIdTokenClaims();
+    // put token in variable
+    const jwt = res.__raw;
+    const config = {
+      method: 'get',
+      // change back to process.env
+      baseURL: url,
+      url: '/books',
+      headers: {
+        "Authorization": `Bearer ${jwt}`
+      }
+    }
+    const bookResponse = await axios(config);
     console.log(bookResponse.data);
     this.setState({ books: bookResponse.data });
   }
@@ -79,8 +68,17 @@ class App extends React.Component {
   deleteBook = async (book) => {
     console.log("delete", book._id)
     try {
-      await axios.delete(url + '/books/' + book._id + `?email=${this.state.email}`);
 
+      const res = await this.props.auth0.getIdTokenClaims();
+
+      const jwt = res.__raw;
+      const config = {
+        method: 'delete',
+        baseURL: url,
+        url: `/books/${book._id}`,
+        headers: { "Authorization": `Bearer ${jwt}` }
+      }
+      await axios(config);
       const updatedBooks = this.state.books.filter(filterBook => filterBook._id !== book._id)
       this.setState({ books: updatedBooks })
     } catch (e) {
@@ -90,8 +88,16 @@ class App extends React.Component {
 
   updateBook = async (updatedBookObj, id) => {
     try {
-      // send put request with updated book
-      const updatedBook = await axios.put(url + '/books/' + id, updatedBookObj);
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      const config = {
+        method: 'put',
+        baseURL: url,
+        url: `/books/${id}`,
+        data: updatedBookObj,
+        headers: { "Authorization": `Bearer ${jwt}` }
+      }
+      const updatedBook = await axios(config);
       const updatedBookState = this.state.books.map(book => {
         // make sure ids match
         if (book._id === id) {
@@ -99,30 +105,31 @@ class App extends React.Component {
         }
         return book;
       })
-      this.setState({ books: updatedBookState });
+      this.setState({ books: updatedBookState })
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }
 
-  // pass set books and this.state.books to profile and bestbooks
   render() {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler} showModal={this.showModal} />
-          <Container>
-            <Switch>
-              <Route exact path="/">
-                {this.state.user ? <BestBooks books={this.state.books} /> : <Login onLogin={this.loginHandler} />}
-                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
-              </Route>
-              <Route exact path="/profile">
-                <Profile user={this.state.user} email={this.state.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
-                <BookFormModal closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.state.email} user={this.state.user} />
-              </Route>
-            </Switch>
-          </ Container>
+          {this.props.auth0.isAuthenticated ?
+            <>
+              <Header user={this.props.auth0.user.given_name} logoutHandler={this.logoutHandler} showModal={this.showModal} loginHandler={this.loginHandler} />
+              <Switch>
+                <Route exact path="/">
+                  <h2> {this.props.auth0.user.given_name} </ h2>
+                  <BestBooks books={this.state.books} getBooks={this.getBooks} />
+                  <BookFormModal auth0={this.props.auth0} closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
+                </Route>
+                <Route exact path="/profile">
+                  <Profile user={this.props.auth0.user.given_name} email={this.props.auth0.user.email} books={this.state.books} deleteBook={this.deleteBook} updateBook={this.updateBook} />
+                  <BookFormModal auth0={this.props.auth0} closeModal={this.closeModal} books={this.state.books} setBooks={this.setBooks} show={this.state.show} email={this.props.auth0.user.email} user={this.props.auth0.user.given_name} />
+                </Route>
+              </Switch>
+            </ > : <Login loginHandler={this.loginHandler} />}
           <Footer />
         </Router>
       </>
@@ -130,4 +137,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuth0(App);
